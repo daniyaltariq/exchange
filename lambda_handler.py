@@ -13,11 +13,9 @@ import requests
 import xmltodict
 
 
-def get_performance(last_price, current_price):
+def get_performance(current_price, last_price):
     """Function will calculate the percentage difference between last & current price."""
-    return round(
-        ((float(current_price) - float(last_price)) / float(last_price)) * 100, 2
-    )
+    return round(((float(current_price) - float(last_price)) / float(last_price)) * 100, 2)
 
 
 def get_exchange_rates(table_name, historic=False):
