@@ -13,6 +13,31 @@ date e.g. date="2023-02-14<br>
 https://0syqhjy9p2.execute-api.ap-northeast-1.amazonaws.com/demo/prices?date=2022-11-17
 ## Headers
 x-api-key: 85yBB7dWSjakpSclXBdr415BASvoVzxa3CkUPYe9
+## Response
+```
+{
+    "date": "2022-11-25",
+    "exchange_info": {
+        "USD": [
+            1.0375,   <This is the exchange rate>
+            -0.36     <This is percentage performance as compared to last working day -0.36>
+        ],
+        "JPY": [
+            144.62,
+            0.5
+        ],
+        "BGN": [
+            1.9558,
+            0.0
+        ],
+        "CZK": [
+            24.367,
+            -0.1
+        ],
+        ...
+    }
+}
+```
 
 # AWS Services
 1. Lambda
