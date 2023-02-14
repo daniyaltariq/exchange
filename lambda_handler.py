@@ -86,12 +86,12 @@ def lambda_handler(event, context):
     """This is a Lambda Function."""
     dynamodb = boto3.resource("dynamodb")
     # For local development
-    dynamodb = boto3.resource(
-        "dynamodb",
-        aws_access_key_id='aws_access_key_id',
-        aws_secret_access_key='aws_secret_access_key',
-        region_name='region_name',
-    )
+    # dynamodb = boto3.resource(
+    #     "dynamodb",
+    #     aws_access_key_id='aws_access_key_id',
+    #     aws_secret_access_key='aws_secret_access_key',
+    #     region_name='region_name',
+    # )
     dynamo_table = dynamodb.Table("exchange-rate")
     params = event.get("queryStringParameters")
     if event.get("path") in ["/prices", "/prices/"]:
