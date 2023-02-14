@@ -41,15 +41,15 @@ def get_exchange_rates(table_name, historic=False):
                 ]
             )
             exchange_info = {
-                item["@currency"]: (
+                item["@currency"]: [
                     float(item["@rate"]),
                     get_performance(item["@rate"], last_item[item["@currency"]][0]),
-                )
+                ]
                 for item in exchange_data["Cube"]
             }
         else:
             exchange_info = {
-                item["@currency"]: (float(item["@rate"]), 0.0)
+                item["@currency"]: [float(item["@rate"]), 0.0]
                 for item in exchange_data["Cube"]
             }
         table_name.put_item(
@@ -107,8 +107,12 @@ def lambda_handler(event, context):
         else:
             current_date = date.today()
             if current_date.weekday() in [5, 6]:
-                current_date = current_date - timedelta((current_date.weekday() - 5 + 1))
-            response = get_item_from_db(dynamo_table, {"date": current_date.strftime("%Y-%m-%d")})
+                current_date = current_date - timedelta(
+                    (current_date.weekday() - 5 + 1)
+                )
+            response = get_item_from_db(
+                dynamo_table, {"date": current_date.strftime("%Y-%m-%d")}
+            )
             if response.get("Item", None) is None:
                 current_date = current_date - timedelta(1)
                 if current_date.weekday() in [5, 6]:
@@ -120,9 +124,13 @@ def lambda_handler(event, context):
                 )
 
         if response.get("Item"):
-            response["Item"].pop("id", None)
-            return get_response(200, json.dumps(response.get("Item")))
-        return get_response(400, "Data isn't availbale for the provided date. Make sure it's a weekday.")
+            response = response["Item"]
+            response["exchange_info"] = ast.literal_eval(response["exchange_info"])
+            response.pop("id", None)
+            return get_response(200, json.dumps(response))
+        return get_response(
+            400, "Data isn't availbale for the provided date. Make sure it's a weekday."
+        )
     else:
-        get_exchange_rates(dynamo_table, True)
+        get_exchange_rates(dynamo_table)
         return get_response(200, "Data processed successfully.")
